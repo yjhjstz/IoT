@@ -1,9 +1,18 @@
 var moment = require('moment');
 
-function formatTime(time) {
+function formatSecond(time) {
     var t = moment(time).toObject();
     t.seconds = 0;
     t.milliseconds = 0;
+    return moment(t).toDate();
+}
+
+function formatDay(time) {
+    var t = moment(time).toObject();
+    t.seconds = 0;
+    t.milliseconds = 0;
+    t.minutes = 0;
+    t.hours = 0;
     return moment(t).toDate();
 }
 
@@ -13,5 +22,6 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-module.exports.formatTime = formatTime;
+module.exports.formatSecond = formatSecond;
+module.exports.formatDay = formatDay;
 module.exports.getRandomInt = getRandomInt;

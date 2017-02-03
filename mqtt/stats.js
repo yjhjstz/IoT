@@ -7,7 +7,7 @@ exports.saveAir = (payload) => {
     var json = JSON.parse(payload);
     if(!json) return;
     var date = new Date(json.updated);
-    var ts = util.formatTime(date);
+    var ts = util.formatSecond(date);
     var seconds = date.getSeconds();
     var val = {};
     val[seconds] = json.pm25;
