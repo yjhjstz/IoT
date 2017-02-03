@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 const airSchema = new Schema({
     sensorId: { type: Number, default: 0 },
     updated: { type: Date, default: Date.now },
+    count: { type: Number, default: 0 },
+    sum: { type: Number, default: 0 },
     pm25: [ {} ],
     probe: String
 });

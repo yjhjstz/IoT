@@ -12,7 +12,10 @@ exports.saveAir = (payload) => {
     var val = {};
     val[seconds] = json.pm25;
     var query = {updated: ts, sensorId:json.sensorId };
-    Air.update(query, {$addToSet: {'pm25': val }, $set:{ probe: json.probe } }, {upsert:true}, function(err, raw) {
+    Air.update(query, {$addToSet: {'pm25': val },
+                       $set:{ probe: json.probe },
+                       $inc: { count: 1, sum: json.pm25 }
+                      }, {upsert:true}, function(err, raw) {
           if (err) throw err;
           console.log(raw);
     });

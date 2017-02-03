@@ -58,6 +58,7 @@ router.get('/api/airavg/:id', function(req, res, next) {
             console.error(err);
             return;
         }
+        console.log(result);
         res.send(result);
     });
 

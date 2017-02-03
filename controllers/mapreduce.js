@@ -8,15 +8,8 @@ module.exports.getAvgPm25 = function(query, callback) {
     o.map = function () {
         var ts = this.updated;
         var key = new Date(ts.getYear(), ts.getMonth(), ts.getDay());
-        var val = 0;
 
-        this.pm25.forEach(function(value) {
-            var keys = Object.keys(value);
-            val += value[keys[0]];
-        });
-
-        val = val / this.pm25.length;
-        emit(key, val);
+        emit(key, this.sum/this.count);
     };
     o.reduce = function (key, values) {
         return Array.sum(values) / values.length;
@@ -28,7 +21,6 @@ module.exports.getAvgPm25 = function(query, callback) {
     Air.mapReduce(o, function (err, model, stats) {
       console.log(stats);
       model.find().exec(function (err, docs) {
-        console.log(docs);
         callback(err, docs);
       });
     });
