@@ -15,18 +15,20 @@ client.subscribe('/led/' + id);
 
 client.on('connect', () => {    
     console.log(chalk.cyan('Client connected!'));
-    var air = {
-        sensorId: id,
-        pm25: util.getRandomInt(1,500),
-        probe: 'node.js',
-        updated: new Date()
-    }
-    console.log(air);
-    client.publish('/stats/air', JSON.stringify(air));
-
 });
 
 client.on('message', function (topic, message) {
   // message is Buffer 
   console.log(chalk.blue(topic)+'  ' + message.toString());
 });
+
+setInterval(function () {
+    var air = {
+        sensorId: id,
+        pm25: util.getRandomInt(1,500),
+        probe: 'node.js',
+        updated: new Date()
+    };
+    console.log(air);
+    client.publish('/stats/air', JSON.stringify(air));
+}, 5000);
