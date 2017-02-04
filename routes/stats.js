@@ -30,7 +30,7 @@ router.get('/api/air/:id/ts',function (req, res, next) {
 
 });
 
-router.get('/api/air/:id/all',function (req, res, next) {
+router.get('/api/air/all/:id',function (req, res, next) {
     console.log(req.params);
     var sensorid = req.params.id;
     var query = {
@@ -47,7 +47,7 @@ router.get('/api/air/:id/all',function (req, res, next) {
     });
 });
 
-router.get('/api/airavg/:id', function(req, res, next) {
+router.get('/api/air/avg/:id', function(req, res, next) {
     console.log(req.params);
     var sensorid = req.params.id;
     var query = {

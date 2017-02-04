@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/led/:id/:action', function(req, res, next) {
+router.get('/api/led/:id/:action', function(req, res, next) {
     var id = req.params.id;
     var packet = {
       topic: '/led/' + id,
