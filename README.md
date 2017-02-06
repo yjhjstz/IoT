@@ -21,6 +21,6 @@ IoT node.js server
 | ----| ---------------------| ---------------------------- |
 | GET | /api/led/:id/:action | id: 传感器 ID，action: on/off |
 | GET | /api/air/avg/:id     | id: 传感器 ID，获取天气平均值   |
-| GET | /api/air/all/:id     | id: 传感器 ID，获取该传感器的所有数据 |
 | GET | /api/air/:id/ts      | id: 传感器 ID, query时间参数(iso) st=2017-01-24T01:30:00.000Z&et=2017-02-03T06:03:00.000Z |
+| GET | /api/air/geo/avg     | query 地理参数 longitude=114.43&lattitude=38.58&distance=10 |
 

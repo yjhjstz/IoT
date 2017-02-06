@@ -63,4 +63,24 @@ router.get('/api/air/avg/:id', function(req, res, next) {
     });
 
 });
+
+router.get('/api/air/geo/avg', function(req, res, next) {
+    console.log(req.query);
+    var longitude = req.query.longitude;
+    var lattitude = req.query.lattitude;
+    var distance = req.query.distance / 6378;
+    var query = { location: { $geoWithin: { $centerSphere: [ [ longitude, lattitude ] ,
+                                                     distance ] } } };
+    mr.getAvgPm25ByID(query, function(err, result){
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log(result);
+        res.send(result);
+    });
+
+});
+
+
 module.exports = router;
