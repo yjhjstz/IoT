@@ -7,11 +7,18 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/api/led/:id/:action', function(req, res, next) {
-    var id = req.params.id;
+// TOD get status
+router.get('/api/led/', function(req, res, next) {
+
+});
+
+
+router.post('/api/led/', function(req, res, next) {
+    console.log(req.body);
+    var id = req.body.id;
     var packet = {
       topic: '/led/' + id,
-      payload: req.params.action,
+      payload: req.body.action,
       qos: 1,
       retain: false
     };
@@ -20,7 +27,6 @@ router.get('/api/led/:id/:action', function(req, res, next) {
       console.log('Message sent');  // it passes by here
       res.json({ result:true });
     });
-
 
 });
 

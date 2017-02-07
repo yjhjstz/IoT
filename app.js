@@ -43,8 +43,8 @@ app.use(session({
 
 
 // Register routes
-app.use(require('./routes/index'));
-app.use(require('./routes/stats'));
+app.use(require('./routes/led'));
+app.use(require('./routes/air'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
