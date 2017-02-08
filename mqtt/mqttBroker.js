@@ -36,7 +36,7 @@ broker.on('published', function(packet, client){
     console.log(chalk.blue(packet.topic)+'  ' + packet.payload.toString());
     switch(packet.topic) {
         case '/stats/air':
-            stats.saveAir(packet.payload.toString());
+            stats.saveMetrics(packet.payload.toString());
             break;
     }
 });

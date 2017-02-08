@@ -3,7 +3,7 @@ const util = require('../utils/common');
 const Air = require('../models/air');
 
 // save data to mongodb
-exports.saveAir = (payload) => {
+exports.saveMetrics = (payload) => {
     var json = JSON.parse(payload);
     if(!json) return;
     var date = new Date(json.updated);
