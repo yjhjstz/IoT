@@ -7,6 +7,7 @@ var port = new SerialPort('/dev/ttyAMA0', {
 
 var buffer = [];
 var airs = [];
+var miss = 0;
 
 port.on('open', function() {
     console.log('open serialport.');
@@ -58,8 +59,13 @@ client.on('message', function (topic, message) {
 setInterval(function() {
   if (airs.length === 0) {
     console.log('error....');
+    miss++;
+    if (miss >= 3) {
+      console.log('there is something wrong with the pm25 sensor: ' + miss + 's');
+    }
     return;
   }
+  miss = 0;
   var sum = 0;
   for (var i = 0; i < airs.length; i++) {
     sum += airs[i];
