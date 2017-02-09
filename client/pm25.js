@@ -21,6 +21,7 @@ port.on('error', function(err) {
 port.on('data', function (data) {
   console.log(data);
   for (var i = 0; i < data.length; i++) {
+    var byte = data.readUInt8(i);
     buffer.append(byte);
   }
 
