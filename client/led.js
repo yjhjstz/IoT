@@ -32,7 +32,7 @@ function OFF () {
 
 client.subscribe('/led/' + 1);
 
-client.on('connect', () => {
+client.on('connect', function() {
     console.log('Client connected!');
 });
 
