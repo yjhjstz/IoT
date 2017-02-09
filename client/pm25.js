@@ -6,8 +6,7 @@ var port = new SerialPort('/dev/ttyAMA0', {
 });
 
 var buffer = [];
-var count = 0;
-var bufferComplete = false;
+var airs = [];
 
 port.on('open', function() {
     console.log('open serialport.');
@@ -18,49 +17,31 @@ port.on('error', function(err) {
     console.log('Error: ', err.message);
 });
 
-
-
 port.on('data', function (data) {
   console.log(data);
   for (var i = 0; i < data.length; i++) {
-    var byte = data.readUInt8(i);
-    buffer[count] = byte;
-
-    if (buffer[count] == 0xAA) {
-      count = 0;
-    } else if (buffer[count] == 0xFF) {
-      bufferComplete = true;
-    }
-
-    count++;
-    if (count >= 7) {
-      count = 0;
-    }
+    buffer.append(byte);
   }
 
-  if (bufferComplete === true) {
-    bufferComplete = false;
-    port.pause(); // pause
-    if (((buffer[1] + buffer[2]+buffer[3] + buffer[4]) & 0xFF) != buffer[5]) {
-      console.log('check bit error!');
-      return;
-    }
-    var v_out = 0;
-    v_out = ((buffer[1]*256)+buffer[2])*5/1024;
-    var ppm = v_out*1000*0.5;
-    console.log("ppm = " + ppm + "ug/m3");
+  // make sure the first byte is 0xAA
+  while (buffer[0] !== 0xAA && buffer[0] !== undefined) {
+    buffer.shift();
+  }
 
-    var air = {
-        sensorId: 1,
-        pm25: ppm,
-        probe: 'sensor pm25',
-        updated: new Date(),
-        location: [
-            120.19,30.26
-        ]
-    };
-    console.log(air);
-    client.publish('/stats/air', JSON.stringify(air));
+  if (buffer.length >= 7) {
+    if (buffer[6] === 0xFF) {
+      var crc = (buffer[1] + buffer[2] + buffer[3] + buffer[4]) % 256;
+      if (crc === buffer[5]) {
+        var v_out = ((buffer[1]*256)+buffer[2])*5/1024;
+        var ppm = v_out * 1000 * 0.5;
+        airs.append(ppm);
+      }
+      // remove the first 7 bytes
+      buffer = buffer.slice(7, buffer.length);
+    } else {
+      // remove the first 0xAA, loop it when next data received.
+      buffer.shift();
+    }
   }
 });
 
@@ -69,13 +50,34 @@ client.on('connect', function() {
 });
 
 client.on('message', function (topic, message) {
-  // message is Buffer 
+  // message is Buffer
   console.log(topic+'  ' + message.toString());
 });
 
-// speed control 
+// speed control
 setInterval(function() {
-  port.resume();
+  if (airs.length === 0) {
+    console.log('error....');
+    return;
+  }
+  var sum = 0;
+  for (var i = 0; i < airs.length; i++) {
+    sum += airs[i];
+  }
+
+  var air = {
+    sensorId: id,
+    pm25: sum / airs.length,
+    probe: 'sensor pm25',
+    updated: new Date(),
+    location: [
+      114.434945, 38.583943
+    ]
+  };
+
+  console.log(air);
+  client.publish('/stats/air', JSON.stringify(air));
+  airs = [];
 }, 1000);
 
 
