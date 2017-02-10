@@ -16,7 +16,7 @@ module.exports.getAvgPm25ByID = function(query, callback) {
         return Array.sum(values) / values.length;
     };
 
-    o.out = { replace: 'avgPm25PerDayByID' };
+    o.out = { replace: 'avgPm25ByID' };
     o.verbose = true;
 
     Air.mapReduce(o, function (err, model, stats) {
