@@ -56,7 +56,7 @@ port.on('data', function (data) {
         probe: 'sensor pm25',
         updated: new Date(),
         location: [
-            114.434945, 38.583943
+            120.19,30.26
         ]
     };
     console.log(air);

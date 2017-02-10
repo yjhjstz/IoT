@@ -53,7 +53,7 @@ client.on('message', function (topic, message) {
 setInterval(function () {
     var air = {
         sensorId: id,
-        pm25: util.getRandomInt(1,500),
+        pm25: util.getRandomInt(1,350),
         probe: 'node.js',
         updated: new Date(),
         location: [

@@ -5,6 +5,24 @@ var mr = require('../controllers/mapreduce');
 var express = require('express');
 var router = express.Router();
 
+var geoCoordMap = {
+    '杭州':[120.19,30.26],
+};
+
+var convertData = function (data) {
+    var res = [];
+    for (var i = 0; i < data.length; i++) {
+        var geoCoord = geoCoordMap[data[i].name];
+        if (geoCoord) {
+            res.push({
+                name: data[i].name,
+                value: geoCoord.concat(data[i].value)
+            });
+        }
+    }
+    return res;
+};
+
 // 部分保留
 var checkParams = function (params, keys) {
   for (var i = 0; i < keys.length; i++) {
@@ -14,6 +32,15 @@ var checkParams = function (params, keys) {
     }
   }
 };
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', {title: 'Air overview'});
+});
+
+router.get('/trend', function(req, res, next) {
+  res.render('trend', {title: 'Air trends'});
+});
 
 router.get('/api/air/', function(req, res, next) {
     console.log(req.query);
@@ -45,23 +72,31 @@ router.get('/api/air/', function(req, res, next) {
                 console.error(err);
                 return;
             }
-            console.log(result);
-            res.send(result);
+            var data = [
+                {
+                    name: '杭州',
+                    value: result[0].value || 'unknown'
+                }
+            ];
+            //
+            res.json({data: convertData(data)});
         });
     } else {
-        var find = Air.find(query).select('pm25 updated -_id');
+        var find = Air.find(query).select('sum count updated -_id').sort({'updated': 1}).limit(128);
 
-        find.exec(function (err, data) {
+        find.exec(function (err, result) {
             if(err) {
                 console.error(err);
                 return;
             }
-
-            res.send(data);
+            var data = {x:[], y:[]};
+            result.forEach(function(item) {
+                data.x.push(item.updated);
+                data.y.push(item.sum/item.count);
+            });
+            res.json(data);
         });
     }
-
-
 });
 
 

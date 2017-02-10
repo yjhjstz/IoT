@@ -4,20 +4,107 @@
     <meta charset="utf-8">
     <title> <%= title %> </title>
     <!-- 引入 echarts.js -->
-    <script src="//cdn.bootcss.com/echarts/3.4.0/echarts.common.js"></script>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
 </head>
 <body>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="width: 600px;height:400px;"></div>
+    <div id="main" style="width: 800;height:600px;"></div>
+    
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
 
-        // 指定图表的配置项和数据
-        var option = JSON.parse(<%-JSON.stringify(data)%>);
-
+        var option = {
+            backgroundColor: '#404a59',
+            title: {
+                text: '全国主要城市空气质量',
+                subtext: 'data from sensor',
+                sublink: 'http://www.pm25.in',
+                left: 'center',
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            tooltip : {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                y: 'bottom',
+                x:'right',
+                data:['pm2.5'],
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            geo: {
+                map: 'china',
+                label: {
+                    emphasis: {
+                        show: false
+                    }
+                },
+                roam: true,
+                itemStyle: {
+                    normal: {
+                        areaColor: '#323c48',
+                        borderColor: '#111'
+                    },
+                    emphasis: {
+                        areaColor: '#2a333d'
+                    }
+                }
+            },
+            series : [
+                {
+                    name: 'pm2.5',
+                    type: 'scatter',
+                    coordinateSystem: 'geo',
+                    data: [],
+                    symbolSize: function (val) {
+                        return val[2] / 10;
+                    },
+                    label: {
+                        normal: {
+                            formatter: '{b}',
+                            position: 'right',
+                            show: true
+                        },
+                        emphasis: {
+                            show: true
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#ddb926'
+                        }
+                    }
+                }
+            ]
+        };
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
+
+        myChart.on('click', function (params) {
+            $(location).attr('href','./trend');
+        });
+
+        $(document).ready(function(){
+            $.get("/api/air?method=avg&st=2017-01-31T00:00:00.000Z&et=2017-02-08T06:00:00.000Z&id=1", function(data,status){
+              myChart.setOption({
+                    series: [{
+                        data: data.data
+                    }]
+              });
+            });
+        });
+
     </script>
 </body>
 </html>
