@@ -41,7 +41,7 @@ port.on('data', function (data) {
   if (bufferComplete === true) {
     bufferComplete = false;
     port.pause(); // pause
-    if (buffer[1] + buffer[2]+buffer[3] + buffer[4] != buffer[5]) {
+    if (((buffer[1] + buffer[2]+buffer[3] + buffer[4]) & 0xFF) != buffer[5]) {
       console.log('check bit error!');
       return;
     }
@@ -51,7 +51,7 @@ port.on('data', function (data) {
     console.log("ppm = " + ppm + "ug/m3");
 
     var air = {
-        sensorId: id,
+        sensorId: 1,
         pm25: ppm,
         probe: 'sensor pm25',
         updated: new Date(),
