@@ -5,23 +5,6 @@ var mr = require('../controllers/mapreduce');
 var express = require('express');
 var router = express.Router();
 
-var geoCoordMap = {
-    '杭州':[120.19,30.26],
-};
-
-var convertData = function (data) {
-    var res = [];
-    for (var i = 0; i < data.length; i++) {
-        var geoCoord = geoCoordMap[data[i].name];
-        if (geoCoord) {
-            res.push({
-                name: data[i].name,
-                value: geoCoord.concat(data[i].value)
-            });
-        }
-    }
-    return res;
-};
 
 // 部分保留
 var checkParams = function (params, keys) {
@@ -33,10 +16,6 @@ var checkParams = function (params, keys) {
   }
 };
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', {title: 'Air overview'});
-});
 
 router.get('/trend', function(req, res, next) {
   res.render('trend', {title: 'Air trends'});
@@ -45,17 +24,12 @@ router.get('/trend', function(req, res, next) {
 router.get('/api/air/', function(req, res, next) {
     console.log(req.query);
     var query = {};
+    checkParams(req.query, ['id', 'st', 'et']);
     var sensorId = req.query.id;
     if (sensorId) {
         Object.assign(query, { sensorId: sensorId });
     }
-    var longitude = req.query.longitude;
-    var lattitude = req.query.lattitude;
-    var distance = req.query.distance;
-    if (longitude && lattitude && distance) {
-        Object.assign(query, { location: { $geoWithin: { $centerSphere: [ [ longitude, lattitude ] ,
-                                                     distance/6378 ] } } });
-    }
+    
     var st = req.query.st;
     var et = req.query.et;
     if (st && et ) {
@@ -64,22 +38,29 @@ router.get('/api/air/', function(req, res, next) {
                    $lt: new Date(et).toISOString()
                  }});
     }
-    var method = req.query.method;
+
+    var longitude = req.query.longitude;
+    var lattitude = req.query.lattitude;
+    var distance = req.query.distance;
+    if (longitude && lattitude && distance) {
+        Object.assign(query, { location: { $geoWithin: { $centerSphere: [ [ longitude, lattitude ] ,
+                                                     distance/6378 ] } } });
+    }
+    
+    var precision = req.query.precision;
     console.log(query);
-    if (method) {
+    var data = {x:[], y:[]};
+    if (precision && precision === 'day') {
         mr.getAvgPm25ByID(query, function(err, result){
             if (err) {
                 console.error(err);
                 return;
             }
-            var data = [
-                {
-                    name: '杭州',
-                    value: result[0].value || 'unknown'
-                }
-            ];
-            //
-            res.json({data: convertData(data)});
+            result.forEach(function(item) {
+                data.x.push(item._id.ts);
+                data.y.push(item.value);
+            });
+            res.json(data);
         });
     } else {
         var find = Air.find(query).select('sum count updated -_id').sort({'updated': 1}).limit(128);
@@ -89,7 +70,6 @@ router.get('/api/air/', function(req, res, next) {
                 console.error(err);
                 return;
             }
-            var data = {x:[], y:[]};
             result.forEach(function(item) {
                 data.x.push(item.updated);
                 data.y.push(item.sum/item.count);

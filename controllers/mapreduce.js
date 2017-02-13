@@ -8,7 +8,7 @@ module.exports.getAvgPm25ByID = function(query, callback) {
     o.query = query;
     o.map = function () {
         var ts = this.updated;
-        var time = new Date(ts.getYear() + 1900, ts.getMonth(), ts.getDay());
+        var time = new Date(ts.getFullYear(), ts.getMonth(), ts.getDay());
 
         emit({ts: time, sensorId: this.sensorId }, this.sum/this.count);
     };

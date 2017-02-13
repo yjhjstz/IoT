@@ -13,6 +13,13 @@
     <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
 </head>
 <body>
+    <form id="myform"  method="get">
+        <label for="sensor"> Sensor id: <input type="number" name="id" value=1><br>
+        <label for="precision"> 每分钟/每天: <input type="text" name="precision" value='min'><br>
+        <label for="stime"> 开始Date : </label><input id="stime" name="st" type="date" value="2017-02-01"/><br>
+        <label for="etime"> 结束Date : </label><input id="etime" name="et" type="date" value="2017-03-01"/><br>
+        <input type="button"  class='button' id="lastinput"  value="确认提交"/><br><br>
+    </form>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
     <div id="main" style="width: 800;height:600px;"></div>
     
@@ -46,7 +53,7 @@
             }
         },
         dataZoom: [{
-            startValue: '2017-02-04'
+            startValue: '2017-02-01'
         }, {
             type: 'inside'
         }],
@@ -103,15 +110,21 @@
     };
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
-        $(document).ready(function(){
-            $.get("/api/air?st=2017-02-04T00:00:00.000Z&et=2017-02-08T06:00:00.000Z&id=1", function(data,status){
-              myChart.setOption({
-                    xAxis: {
-                        data: data.x
-                    },
-                    series: [{
-                        data: data.y
-                    }]
+
+        $(document).ready(function() { 
+            $('#lastinput').click(function() {
+              $.ajax({
+                 url:'/api/air',
+                 type:'get',         //数据发送方式
+                 dataType:'json',   //接受数据格式
+                 data:$("#myform").serialize(),
+                 success:function(msg, textStatus) {
+                    option.xAxis.data = msg.x;
+                    option.series.data = msg.y;
+                    myChart.showLoading();
+                    myChart.setOption(option);
+                    myChart.hideLoading();
+                 }
               });
             });
         });
