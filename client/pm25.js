@@ -30,7 +30,7 @@ port.on('data', function (data) {
     buffer.shift();
   }
 
-  if (buffer.length >= 7) {
+  while (buffer.length >= 7) {
     if (buffer[6] === 0xFF) {
       var crc = (buffer[1] + buffer[2] + buffer[3] + buffer[4]) % 256;
       if (crc === buffer[5]) {
@@ -42,9 +42,12 @@ port.on('data', function (data) {
       buffer = buffer.slice(7, buffer.length);
     } else {
       // remove the first 0xAA, loop it when next data received.
-      buffer.shift();
+      while (buffer[0] !== 0xAA && buffer[0] !== undefined) {
+        buffer.shift();
+      }
     }
   }
+
 });
 
 client.on('connect', function() {
