@@ -3,16 +3,14 @@ var router = express.Router();
 var util = require('../utils/common');
 var broker = require('../mqtt/mqttBroker').broker;
 
-
-
 // TODO get status
 router.get('/api/led/', function(req, res, next) {
-
+  res.render('led', {title: 'Led demo', number: 24});
 });
 
 
 router.post('/api/led/', function(req, res, next) {
-    console.log(req.body);
+    console.log('led control:', req.body);
     util.checkParams(req.body, ['id', 'action']);
     var id = req.body.id;
     var packet = {
@@ -29,5 +27,6 @@ router.post('/api/led/', function(req, res, next) {
 
 });
 
+// status 通过 publish topic 定时发布
 
 module.exports = router;

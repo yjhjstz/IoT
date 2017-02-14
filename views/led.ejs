@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title> <%= title %> </title>
+  <script type="text/javascript" src="../javascripts/jquery.min.js"></script>
+  <style type="text/css">
+    div.background {
+
+      margin-top: 200;
+      margin:  auto;
+      z-index: 10;
+      width: 90%;
+
+      background: black
+    }
+  </style>
+
+
+</head>
+<body>
+
+  <div id="main" class="background">
+  <% var num = number; %>
+  <% for (var i = 0; i < num; i++) { %>
+    <% var bulbId = 'bulb-' + i; %>
+    <input type="image" id=<%=bulbId%> src='../images/pic_bulbon.gif' style="margin-left:60px; width:6%;" >
+  <% } %>
+
+  </div>
+
+  <script type="text/javascript">
+    const img_on = '../images/pic_bulbon.gif';
+    const img_off = '../images/pic_bulboff.gif'
+    $(document).ready(function(){
+      $("input").click(function(){
+        var id = this.id.split('-')[1];
+        var status;
+        var e = document.getElementById(this.id);
+        if (e.src.endsWith('pic_bulbon.gif')) {
+          e.src = img_off;
+          status = 'off';
+        } else if (e.src.endsWith('pic_bulboff.gif')) {
+          e.src = img_on;
+           status = 'on';
+        }
+        $.post("/api/led",
+        {
+          id: id,
+          action: status
+        },
+        function(data,status){
+          console.log(data);
+        });
+      });
+    });
+
+  </script>
+</body>
+</html>
