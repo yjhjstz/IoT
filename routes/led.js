@@ -3,9 +3,14 @@ var router = express.Router();
 var util = require('../utils/common');
 var broker = require('../mqtt/mqttBroker').broker;
 
+
+router.get('/led/', function(req, res, next) {
+  res.render('led', {title: 'Led demo', number: 24});
+});
+
 // TODO get status
 router.get('/api/led/', function(req, res, next) {
-  res.render('led', {title: 'Led demo', number: 24});
+
 });
 
 
