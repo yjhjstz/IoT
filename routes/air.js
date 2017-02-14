@@ -6,17 +6,6 @@ var express = require('express');
 var router = express.Router();
 
 
-// 部分保留
-var checkParams = function (params, keys) {
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
-    if (!Object.prototype.hasOwnProperty.call(params, key)) {
-      throw new Error('Parameter missed: ' + key);
-    }
-  }
-};
-
-
 router.get('/trend', function(req, res, next) {
   res.render('trend', {title: 'Air trends'});
 });
@@ -24,7 +13,7 @@ router.get('/trend', function(req, res, next) {
 router.get('/api/air/', function(req, res, next) {
     console.log(req.query);
     var query = {};
-    checkParams(req.query, ['id', 'st', 'et']);
+    util.checkParams(req.query, ['id', 'st', 'et']);
     var sensorId = req.query.id;
     if (sensorId) {
         Object.assign(query, { sensorId: sensorId });
@@ -46,7 +35,7 @@ router.get('/api/air/', function(req, res, next) {
         Object.assign(query, { location: { $geoWithin: { $centerSphere: [ [ longitude, lattitude ] ,
                                                      distance/6378 ] } } });
     }
-    
+
     var precision = req.query.precision;
     console.log(query);
     var data = {x:[], y:[]};

@@ -22,6 +22,17 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+// 部分保留
+function checkParams(params, keys) {
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    if (!Object.prototype.hasOwnProperty.call(params, key)) {
+      throw new Error('Parameter missed: ' + key);
+    }
+  }
+}
+
 module.exports.formatSecond = formatSecond;
 module.exports.formatDay = formatDay;
 module.exports.getRandomInt = getRandomInt;
+module.exports.checkParams = checkParams;
