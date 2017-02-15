@@ -22,7 +22,7 @@ port.on('data', function (data) {
   console.log(data);
   for (var i = 0; i < data.length; i++) {
     var byte = data.readUInt8(i);
-    buffer.append(byte);
+    buffer.push(byte);
   }
 
   // make sure the first byte is 0xAA
@@ -36,7 +36,7 @@ port.on('data', function (data) {
       if (crc === buffer[5]) {
         var v_out = ((buffer[1]*256)+buffer[2])*5/1024;
         var ppm = v_out * 1000 * 0.5;
-        airs.append(ppm);
+        airs.push(ppm);
       }
       // remove the first 7 bytes
       buffer = buffer.slice(7, buffer.length);
@@ -76,7 +76,7 @@ setInterval(function() {
   }
 
   var air = {
-    sensorId: id,
+    sensorId: 1,
     pm25: sum / airs.length,
     probe: 'sensor pm25',
     updated: new Date(),
