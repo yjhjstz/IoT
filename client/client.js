@@ -41,13 +41,27 @@ if (args.length <= 0) {
 var id = args[0];
 client.subscribe('/led/' + id);
 
-client.on('connect', () => {    
+client.on('connect', () => {
     console.log(chalk.cyan('Client connected!'));
 });
 
 client.on('message', function (topic, message) {
-  // message is Buffer 
+  // message is Buffer
   console.log(chalk.blue(topic)+'  ' + message.toString());
+
+  var type = topic.split('/')[1];
+  if (type === 'led') {
+    var id = topic.split('/')[2];
+    var status = message.toString();
+    var led = {
+      id: id,
+      stats: status,
+      updated: new Date()
+    }
+
+    client.publish('/stats/led', JSON.stringify(led));
+  }
+
 });
 
 setInterval(function () {

@@ -4,8 +4,28 @@ var util = require('../utils/common');
 var broker = require('../mqtt/mqttBroker').broker;
 
 
+var ledStatus = [];
+
+var initLedStatus = function (number) {
+  for (var i = 0; i < number; i++) {
+    if (i % 2) {
+      ledStatus.push({id: i, status: 'on'})
+    } else {
+      ledStatus.push({id: i, status: 'off'})
+    }
+  }
+}
+
+var updateLedStatus = function(id, status) {
+  ledStatus[id].status = status;
+}
+
+router.get('/led/status', function(req, res, next) {
+  res.json(ledStatus);
+})
+
 router.get('/led/', function(req, res, next) {
-  res.render('led', {title: 'Led demo', number: 24});
+  res.render('led', {title: 'Led demo', number: ledStatus.length, detail: ledStatus});
 });
 
 // TODO get status
@@ -32,6 +52,20 @@ router.post('/api/led/', function(req, res, next) {
 
 });
 
+
+broker.on('published', function(packet, client){
+
+    var topic = packet.topic;
+    [,type, id] = topic.split('/');
+
+    if (type === 'led') {
+      console.log('>>>>> ',type, id, packet.payload.toString());
+      updateLedStatus(id, packet.payload.toString());
+    }
+});
+
+
+initLedStatus(16);
 // status 通过 publish topic 定时发布
 
 module.exports = router;

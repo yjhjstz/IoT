@@ -5,8 +5,6 @@ const ip = require('ip');
 const stats = require('./stats');
 const config = require('../config');
 
-
-
 const database = {
     type: 'mongo',
     url: config.mongodb,
