@@ -31,14 +31,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// We use mongodb to store session info
-// expiration of the session is set to 1 days (ttl option)
+// We use memory to store session info
 app.use(session({
-    store: new MongoStore({mongooseConnection: mongoose.connection,
-                          ttl: 24*60*60}),
-    saveUninitialized: true,
-    resave: true,
-    secret: "foo"
+  secret: 'recommand 128 bytes random string', // 建议使用 128 个字符的随机字符串
+  cookie: { maxAge: 60 * 1000 },
+  saveUninitialized: true,
+  resave: true,
 }));
 
 
