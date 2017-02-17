@@ -10,8 +10,8 @@ var express = require("express");
     mqttBroker = require('./mqtt/mqttBroker'),
     config = require('./config');
 
+// TODO connect to mongodb
 mongoose.Promise = global.Promise;
-// Connect to mongodb
 mongoose.connect(config.mongodb, function(err) {
     if (err) throw err;
     console.log("Successfully connected to mongodb");

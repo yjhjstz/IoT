@@ -2,6 +2,8 @@
 IoT node.js server
 
 ### 依赖
+* apt-get install libkrb5-dev
+* apt-get install libzmq3-dev
 * mongodb 3.x
 * node.js 4.x
 * npm
