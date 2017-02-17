@@ -47,16 +47,13 @@ router.post('/api/led/', function(req, res, next) {
     };
 
     broker.publish(packet, function() {
-      console.log('Message sent');  // it passes by here
+      console.log('Message published.');  // it passes by here
       res.json({ result:true });
     });
 
 });
 
 
-
-
 initLedStatus(16);
-// status 通过 publish topic 定时发布
 
 module.exports = router;
