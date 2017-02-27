@@ -2,7 +2,7 @@
 const mosca = require('mosca');
 const chalk = require('chalk');
 const ip = require('ip');
-const stats = require('./stats');
+const stats = require('../models/stats');
 const config = require('../config');
 
 

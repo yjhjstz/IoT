@@ -14,10 +14,6 @@ router.get('/api/air/', function(req, res, next) {
     console.log(req.query);
     var query = {};
     util.checkParams(req.query, ['id', 'st', 'et']);
-    var sensorId = req.query.id;
-    if (sensorId) {
-        Object.assign(query, { sensorId: sensorId });
-    }
     
     var st = req.query.st;
     var et = req.query.et;
@@ -26,6 +22,11 @@ router.get('/api/air/', function(req, res, next) {
                    $gte: new Date(st).toISOString(),
                    $lt: new Date(et).toISOString()
                  }});
+    }
+
+    var sensorId = req.query.id;
+    if (sensorId) {
+        Object.assign(query, { sensorId: sensorId });
     }
 
     var longitude = req.query.longitude;

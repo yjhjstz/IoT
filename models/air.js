@@ -12,7 +12,6 @@ const airSchema = new Schema({
 });
 
 airSchema.index({updated:-1, sensorId:1}, {unique: true}); // schema level
-airSchema.index({location: '2dsphere'});
 
 const ModelClass = mongoose.model('air', airSchema);
 
