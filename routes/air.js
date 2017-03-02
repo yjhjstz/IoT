@@ -10,6 +10,19 @@ router.get('/trend', function(req, res, next) {
   res.render('trend', {title: 'Air trends'});
 });
 
+router.get('/api/aqi', function(req, res, next) {
+    var find = Air.find().sort({$natural:-1}).limit(1);
+
+    find.exec(function (err, result) {
+        if(err) {
+            console.error(err);
+            return;
+        }
+        res.json(result);
+    });
+});
+
+
 router.get('/api/air/', function(req, res, next) {
     console.log(req.query);
     var query = {};
