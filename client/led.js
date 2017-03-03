@@ -5,27 +5,24 @@ const LED = 22;
 const PWR = 10;
 
 var power = gpio.export(PWR, { direction: 'out', ready:function() {
-  console.log('led ready power gpio.');
+  console.log('power pin config done.');
+  power.reset(function(){});
 }});
-
 
 var led = gpio.export(LED, { direction: 'out', ready:function() {
-  console.log('led ready control gpio.');
+  console.log('led pin config done.');
 }});
-
-
-power.reset(function(){});
 
 
 function ON () {
   led.set(function() {
-    console.log('set', led.value);
+    console.log('led set', led.value);
   });
 }
 
 function OFF () {
   led.reset(function() {
-    console.log('reset', led.value);
+    console.log('led reset', led.value);
   });
 }
 
@@ -37,7 +34,7 @@ client.on('connect', function() {
 });
 
 client.on('message', function (topic, message) {
-  // message is Buffer 
+  // message is Buffer
   console.log(topic+'  ' + message.toString());
   if (topic === '/led/1') {
     switch(message.toString()) {

@@ -41,6 +41,7 @@ app.use(session({
 
 
 // Register routes
+app.use(require('./routes/dashboard'));
 app.use(require('./routes/led'));
 app.use(require('./routes/air'));
 

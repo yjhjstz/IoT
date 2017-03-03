@@ -5,13 +5,17 @@
   <title> <%= title %> </title>
   <script type="text/javascript" src="./javascripts/jquery.min.js"></script>
   <style type="text/css">
+    p {
+        clear:both;
+        top: 20px;
+        font-size: 20px
+      }
     div.background {
 
       margin-top: 200;
       margin:  auto;
       z-index: 10;
-      width: 90%;
-
+      width: 80%;
       background: black
     }
   </style>
@@ -20,11 +24,16 @@
 </head>
 <body>
 
+<p align="center" style="font-size:32px">智能灯DEMO</p>
   <div id="main" class="background">
   <% var num = number; %>
   <% for (var i = 0; i < num; i++) { %>
     <% var bulbId = 'bulb-' + i; %>
-    <input type="image" id=<%=bulbId%> src='../images/pic_bulbon.gif' style="margin-left:60px; width:6%;" >
+    <% if (detail[i].status === 'on') { %>
+      <input type="image" id=<%=bulbId%> src='../images/pic_bulbon.gif' style="margin-left:40px; width:6%;" >
+    <% } else { %>
+      <input type="image" id=<%=bulbId%> src='../images/pic_bulboff.gif' style="margin-left:40px; width:6%;" >
+    <% }%>
   <% } %>
 
   </div>
@@ -32,6 +41,18 @@
   <script type="text/javascript">
     const img_on = '../images/pic_bulbon.gif';
     const img_off = '../images/pic_bulboff.gif'
+
+    setInterval(function(){
+      $.get('/led/status', function(data) {
+        for (var i = 0; i < data.length; i++) {
+          var id = 'bulb-' + data[i].id;
+          var status = data[i].status;
+          var e = document.getElementById(id);
+          e.src = status === 'on' ? img_on : img_off;
+        }
+      })
+    }, 1000);
+
     $(document).ready(function(){
       $("input").click(function(){
         var id = this.id.split('-')[1];

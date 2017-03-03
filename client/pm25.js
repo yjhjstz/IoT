@@ -1,21 +1,20 @@
 const mqtt = require('mqtt');
-const SerialPort = require('serialport');
 const client = mqtt.connect('mqtt://localhost:1883'); // TODO config
-var port = new SerialPort('/dev/ttyAMA0', {
-  baudRate: 2400
-});
+
+const SerialPort = require('serialport');
+var port = new SerialPort('/dev/ttyAMA0', { baudRate: 2400});
 
 var buffer = [];
 var airs = [];
 var miss = 0;
 
 port.on('open', function() {
-    console.log('open serialport.');
+  console.log('open serialport.');
 });
 
 // open errors will be emitted as an error event
 port.on('error', function(err) {
-    console.log('Error: ', err.message);
+  console.log('Error: ', err.message);
 });
 
 port.on('data', function (data) {
@@ -47,11 +46,10 @@ port.on('data', function (data) {
       }
     }
   }
-
 });
 
 client.on('connect', function() {
-    console.log('Client connected IoT!');
+  console.log('Client connected IoT!');
 });
 
 client.on('message', function (topic, message) {
