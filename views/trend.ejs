@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title> <%= title %> </title>
@@ -8,17 +9,26 @@
     <script type="text/javascript" src="./javascripts/echarts-all-3.js"></script>
     <script type="text/javascript" src="./javascripts/dataTool.min.js"></script>
 </head>
+
+
 <body>
     <form id="myform"  method="get">
-        <label for="sensor"> Sensor id: <input type="number" name="id" value=1><br>
-        <label for="precision"> 每分钟/每天: <input type="text" name="precision" value='min'><br>
-        <label for="stime"> 开始Date : </label><input id="stime" name="st" type="date" value="2017-02-01"/><br>
-        <label for="etime"> 结束Date : </label><input id="etime" name="et" type="date" value="2017-03-01"/><br>
-        <input type="button"  class='button' id="lastinput"  value="确认提交"/><br><br>
+        <label for="sensor">传感器Id</label>
+        <input type="number" name="id" value=1>
+
+        <label for="precision" style="margin-left: 20px">时间间隔</label>
+        <select id="precision" name="precision">
+          <option value="min">每分钟</option>
+          <option value="day">每日</option>
+        </select>
+
+        <label for="stime" style="margin-left: 20px"> 开始日期</label><input id="stime" name="st" type="date" value="2017-02-01"/>
+        <label for="etime"> 结束日期</label><input id="etime" name="et" type="date" value="2017-03-01"/>
+        <input type="button"  class='button' id="lastinput" style="margin-left: 20px"  value="确认提交"/><br><br>
     </form>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="width: 800;height:600px;"></div>
-    
+    <div id="main"  style="width: 95%; height: 600px;"></div>
+
     <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
@@ -98,6 +108,8 @@
                     yAxis: 150
                 }, {
                     yAxis: 200
+                }, {
+                    yAxis: 250
                 }, {
                     yAxis: 300
                 }]

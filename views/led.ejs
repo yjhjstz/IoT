@@ -25,6 +25,9 @@
 <body>
 
 <p align="center" style="font-size:32px">智能灯DEMO</p>
+
+<input type="button" style="font-size:20px; border-radius:10px; width:100px; height:40px; border:#F00 2px solid; background:black; color:yellow; margin-left: 46%;" class='button' id="refresh" value="停止刷新"/><br><br>
+
   <div id="main" class="background">
   <% var num = number; %>
   <% for (var i = 0; i < num; i++) { %>
@@ -41,17 +44,20 @@
   <script type="text/javascript">
     const img_on = '../images/pic_bulbon.gif';
     const img_off = '../images/pic_bulboff.gif'
+    var refreshTimer = null;
 
-    setInterval(function(){
-      $.get('/led/status', function(data) {
-        for (var i = 0; i < data.length; i++) {
-          var id = 'bulb-' + data[i].id;
-          var status = data[i].status;
-          var e = document.getElementById(id);
-          e.src = status === 'on' ? img_on : img_off;
-        }
-      })
-    }, 1000);
+    function startRefresh() {
+      return setInterval(function() {
+        $.get('/led/status', function(data) {
+          for (var i = 0; i < data.length; i++) {
+            var id = 'bulb-' + data[i].id;
+            var status = data[i].status;
+            var e = document.getElementById(id);
+            e.src = status === 'on' ? img_on : img_off;
+          }
+        })
+      }, 1000);
+    }
 
     $(document).ready(function(){
       $("input").click(function(){
@@ -75,6 +81,27 @@
         });
       });
     });
+
+
+    function toggle() {
+      var e = document.getElementById('refresh');
+      if (e.value === '停止刷新') {
+        clearInterval(refreshTimer);
+        refreshTimer = null;
+        e.value = '动态刷新';
+      } else {
+        refreshTimer = startRefresh();
+        e.value = '停止刷新';
+      }
+    }
+
+    $(document).ready(function() {
+      $('#refresh').click(function() {
+        toggle();
+      });
+    });
+
+    refreshTimer = startRefresh();
 
   </script>
 </body>

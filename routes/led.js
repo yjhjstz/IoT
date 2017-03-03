@@ -38,6 +38,7 @@ router.post('/api/led/', function(req, res, next) {
     console.log('led control:', req.body);
     util.checkParams(req.body, ['id', 'action']);
     var id = req.body.id;
+    updateLedStatus(id, req.body.action);
     var packet = {
       topic: '/led/' + id,
       payload: req.body.action,
