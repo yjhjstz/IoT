@@ -44,7 +44,26 @@ pre{
   background:rgba(255,255,255, 0.5);
   color:rgba(0,0,0,1);
   padding:10px;
-}</style></head><body>
+}</style>
+<script type="text/javascript" src="./javascripts/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $.ajax({
+         url:'/api/aqi',
+         type:'get',         //数据发送方式
+         dataType:'json',   //接受数据格式
+         success:function(msg, textStatus) {
+            if (msg.length > 0) {
+              var data = msg[0].sum / msg[0].count;
+              $("#div1").append(data);
+            }
+         }
+      });
+  
+});
+</script>
+</head>
+<body>
 
 <h1>Hello</h1>
 <h1>Welcome to the IoT DEMO dashboard</h1>
@@ -55,7 +74,7 @@ pre{
     <a href="/led">Demo</a>
   </div>
   <div class="container">
-    <span>当前空气指数</span>
+    <span>AQI:<div id="div1"></div></span>
   </div>
   <div class="container">
     <span>空气指数趋势</span>

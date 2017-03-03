@@ -22,7 +22,6 @@ router.get('/api/aqi', function(req, res, next) {
     });
 });
 
-
 router.get('/api/air/', function(req, res, next) {
     console.log(req.query);
     var query = {};

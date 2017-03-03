@@ -53,16 +53,6 @@ router.post('/api/led/', function(req, res, next) {
 });
 
 
-broker.on('published', function(packet, client){
-
-    var topic = packet.topic;
-    [,type, id] = topic.split('/');
-
-    if (type === 'led') {
-      console.log('>>>>> ',type, id, packet.payload.toString());
-      updateLedStatus(id, packet.payload.toString());
-    }
-});
 
 
 initLedStatus(16);
