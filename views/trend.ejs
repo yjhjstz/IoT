@@ -107,9 +107,8 @@
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
 
-        $(document).ready(function() { 
-            $('#lastinput').click(function() {
-              $.ajax({
+        function render_trend() {
+            $.ajax({
                  url:'/api/air',
                  type:'get',         //数据发送方式
                  dataType:'json',   //接受数据格式
@@ -122,6 +121,12 @@
                     myChart.hideLoading();
                  }
               });
+        }
+
+        $(document).ready(function() {
+            render_trend();
+            $('#lastinput').click(function() {
+              render_trend();
             });
         });
 
