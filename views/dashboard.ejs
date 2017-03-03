@@ -55,7 +55,7 @@ $(document).ready(function(){
          success:function(msg, textStatus) {
             if (msg.length > 0) {
               var data = msg[0].sum / msg[0].count;
-              $("#div1").append(data);
+              $("#div1").append(data.toFixed());
             }
          }
       });
