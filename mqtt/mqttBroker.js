@@ -15,7 +15,7 @@ const database = {
 const brokerPort = config.brokerPort;
 const brokerSettings = {
     port: brokerPort,
-    backend: database,
+    //backend: database,
     ttl: {
         subscriptions: 1000 * 60 * 10,
         packets: 1000 * 60 * 10

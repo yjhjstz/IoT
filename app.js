@@ -12,10 +12,10 @@ var express = require("express");
 
 // TODO connect to mongodb
 mongoose.Promise = global.Promise;
-mongoose.connect(config.mongodb, function(err) {
-    if (err) throw err;
-    console.log("Successfully connected to mongodb");
-});
+// mongoose.connect(config.mongodb, function(err) {
+//    if (err) throw err;
+//    console.log("Successfully connected to mongodb");
+// });
 
 // Start app
 var app = express();
