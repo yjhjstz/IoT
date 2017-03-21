@@ -17,12 +17,6 @@ IoT node.js server
 * mock client: node client/client.js 1
 
 
-### API
 
-| 方法 |   URL               | 备注 |
-| ----| ---------------------| ---------------------------- |
-| POST | /api/led/           | id: 传感器 ID，action: on/off |
-| GET | /api/led/            | id: 传感器 ID，action: status |
-| GET | /api/air/            | 例子：/api/air?longitude=114.43&lattitude=38.58&distance=10&precision=day&id=1&st=2017-01-01T01:30:00.000Z&et=2017-02-06T06:03:00.000Z   |
 
 
