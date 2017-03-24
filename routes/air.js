@@ -26,11 +26,11 @@ router.get('/api/air/', function(req, res, next) {
     console.log(req.query);
     var query = {};
     util.checkParams(req.query, ['id', 'st', 'et']);
-    
+
     var st = req.query.st;
     var et = req.query.et;
     if (st && et ) {
-        Object.assign(query, {updated: { 
+        Object.assign(query, {updated: {
                    $gte: new Date(st).toISOString(),
                    $lt: new Date(et).toISOString()
                  }});
@@ -73,7 +73,7 @@ router.get('/api/air/', function(req, res, next) {
                 return;
             }
             result.forEach(function(item) {
-                data.x.push(item.updated);
+                data.x.push(moment(item.updated).format('YYYY-MM-DD HH:mm:ss'));
                 data.y.push(item.sum/item.count);
             });
             res.json(data);
