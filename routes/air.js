@@ -65,13 +65,14 @@ router.get('/api/air/', function(req, res, next) {
             res.json(data);
         });
     } else {
-        var find = Air.find(query).select('sum count updated -_id').sort({'updated': 1}).limit(128);
+        var find = Air.find(query).select('sum count updated -_id').sort({'updated': -1}).limit(128);
 
         find.exec(function (err, result) {
             if(err) {
                 console.error(err);
                 return;
             }
+            result.reverse();
             result.forEach(function(item) {
                 data.x.push(item.updated);
                 data.y.push(item.sum/item.count);
