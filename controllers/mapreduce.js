@@ -11,6 +11,7 @@ module.exports.getAvgPm25ByID = function(query, callback) {
         var time = new Date(ts.getUTCFullYear(), ts.getUTCMonth(), ts.getUTCDate());
         time = time.toLocaleDateString();
         emit({ts: time, sensorId: this.sensorId }, this.sum/this.count);
+
     };
     o.reduce = function (key, values) {
         return Array.sum(values) / values.length;
